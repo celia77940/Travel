@@ -1,76 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import './App.css';
-import {MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css';
-import locations from './locations.json';
-import markerIconx from './images/marker-icon-2x.png'
-import markerIcon from './images/marker-icon.png'
-import markerShadow from './images/marker-shadow.png'
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import L from "leaflet";
+import "./App.css";
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import locations from "./locations.json";
+import markerIconx from "./images/marker-icon-2x.png";
+import markerIcon from "./images/marker-icon.png";
+import markerShadow from "./images/marker-shadow.png";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIconx,
   iconUrl: markerIcon,
-  shadowUrl: markerShadow
+  shadowUrl: markerShadow,
 });
 
-
-// const App = React.forwardRef( (props, ref) => {
-
-//   useEffect(() => {
-//     // const { current = {} } = ref;
-//     // const { leaflelement: map } = current;
-
-//     // if ( !map ) return;
-
-//     // const locationsGeoJSon = new L.GeoJSON(locations);    
-//     // locationsGeoJSon.addTo(map);
-//     console.log(ref)
-
-//   }, [ref])
-
-//   return (
-//     <div className="App">
-//       <MapContainer ref={ref} center={[0, 0]} zoom={4}>
-//       <TileLayer
-//         url="https://api.mapbox.com/styles/v1/celia77940/ckmkla6p53ilr17qvfufknz3v/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2VsaWE3Nzk0MCIsImEiOiJja21rbHZvejkxMmFwMnZwZnNmOXJmeGkyIn0.QQxS5yjCx08qO4ZCGp6u8A"
-//         attribution="Map data &copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors, <a href=&quot;https://creativecommons.org/licenses/by-sa/2.0/&quot;>CC-BY-SA</a>, Imagery &copy; <a href=&quot;https://www.mapbox.com/&quot;>Mapbox</a>"
-//       />
-//       </MapContainer>
-//     </div>
-//   );
-// })
-
 function App() {
-  const [mapRef, setMapRef] = useState(useRef());
-  // const mapRef = useRef();
+  const useHookWithRefCallback = () => {
+    const ref = useRef(null);
+    const setRef = useCallback((node) => {
+      if (ref.current) {
+        // Make sure to cleanup any events/references added to the last instance
+        console.log("en attendant que la carte se charge je suppose");
+      }
 
-  useEffect(() => {
-    const { current = {} } = mapRef;
-    const { leafletElement: map } = current;
+      if (node) {
+        // Check if a node is actually passed. Otherwise node would be null.
+        // You can now do what you need to, addEventListeners, measure, etc.
+        console.log("on a enfin accès à cet objet NewClass")
+        console.log(node);
+        setTimeout(() => {
+          node.flyTo([47.637444, 6.862468], 14, {
+            duration: 3,
+          });
+        }, 5000)
+      }
+      // Save a reference to the node
+      ref.current = node;
+    }, [ref]);
 
-    // if ( !map ) return;
+    return [setRef];
+  };
 
-    // const locationsGeoJSon = new L.GeoJSON(locations);    
-    // locationsGeoJSon.addTo(map);
-    if (map !== undefined){
-      console.log(mapRef)
-      console.log(map)
-    }
-
-  }, [mapRef])
+  const [ref] = useHookWithRefCallback();
 
   return (
     <div className="App">
-      {/* <MapContainer whenCreated={mapInstance => {mapRef.current = mapInstance}} center={[45.90828602556521, 6.120929718017578 ]} zoom={10}> */}
-      <MapContainer whenCreated={mapInstance => setMapRef(mapRef.current = mapInstance)} center={[45.90828602556521, 6.120929718017578 ]} zoom={10}>
-      <TileLayer
-        url="https://api.mapbox.com/styles/v1/celia77940/ckmkla6p53ilr17qvfufknz3v/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2VsaWE3Nzk0MCIsImEiOiJja21rbHZvejkxMmFwMnZwZnNmOXJmeGkyIn0.QQxS5yjCx08qO4ZCGp6u8A"
-        attribution="Map data &copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors, <a href=&quot;https://creativecommons.org/licenses/by-sa/2.0/&quot;>CC-BY-SA</a>, Imagery &copy; <a href=&quot;https://www.mapbox.com/&quot;>Mapbox</a>"
-      />
-      {/* <GeoJSON ref={mapRef}></GeoJSON>      */}
+      <MapContainer
+        whenCreated={ref}
+        center={[45.90828602556521, 6.120929718017578]}
+        zoom={10}
+        zoomControl={false}
+      >
+        <TileLayer
+          url="https://api.mapbox.com/styles/v1/celia77940/ckmkla6p53ilr17qvfufknz3v/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2VsaWE3Nzk0MCIsImEiOiJja21rbHZvejkxMmFwMnZwZnNmOXJmeGkyIn0.QQxS5yjCx08qO4ZCGp6u8A"
+          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+        />
+        <ZoomControl position="bottomright"/>
+        {/*<GeoJSON ref={mapRef}></GeoJSON>*/}
       </MapContainer>
     </div>
   );
