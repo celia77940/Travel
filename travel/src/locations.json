@@ -1,0 +1,44 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+            "name": "Annnecy"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.120929718017578,
+            45.90828602556521
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+            "name": "Gap"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.076812744140625,
+            44.56014191304745
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+            "name": "Grenoble"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            5.73486328125,
+            45.205263456162385
+          ]
+        }
+      }
+    ]
+  }
